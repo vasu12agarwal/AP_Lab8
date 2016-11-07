@@ -182,18 +182,38 @@ class Qone implements Runnable{
         this.a = null;
     }
 
+    int x=1;
+
     public void run(){
-        int i;
-        min = a.get(0);
-        int sum=0;
-        for(i=0;i<a.size();i++){
-            if(a.get(i)<min)
-                min = a.get(i);
+        while(x<5) {
+            x++;
+            synchronized (a) {
+                while(a!=null)
+                {
+                    try {
+                        int i;
+                        min = a.get(0);
+                        int sum=0;
+                        for(i=0;i<a.size();i++){
+                            if(a.get(i)<min) {
+                                min = a.get(i);
+                            }
+                        }
+                        a.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            a.notifyAll();
+            reset();
+            System.out.println(min);
         }
     }
 
-    public float getanswer(){
-        return min;
+    public String toString(){
+        System.out.println(String.valueOf(min));
+        return null;
     }
 
 }
@@ -204,8 +224,16 @@ class Qtwo implements Runnable{
     ArrayList<Float> a;
     Float max;
 
-    public Qtwo(ArrayList<Float> a){
-        this.a = a;
+    public Qtwo(){
+        this.a = null;
+    }
+
+    public void setQ(ArrayList<Float> b) {
+        this.a = b;
+    }
+
+    public void reset(){
+        this.a = null;
     }
 
     public void run(){
@@ -231,8 +259,16 @@ class Qthree implements Runnable{
     ArrayList<Float> a;
     Float avg;
 
-    public Qthree(ArrayList<Float> a){
-        this.a = a;
+    public Qthree(){
+        this.a = null;
+    }
+
+    public void setQ(ArrayList<Float> b) {
+        this.a = b;
+    }
+
+    public void reset(){
+        this.a = null;
     }
 
     public void run(){
@@ -255,16 +291,29 @@ class Qthree implements Runnable{
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         Temperature temp = new Temperature();
-        Thread th_temp = new Thread(temp);
+        Qone q11 = new Qone();
         Rainfall rain = new Rainfall();
-        Thread th_rain = new Thread(rain);
+        Qtwo q12 = new Qtwo();
+        Qthree q13 = new Qthree();
         Humidity humi = new Humidity();
+
+
+
+
+        Thread th_temp = new Thread(temp);
+        Thread th_rain = new Thread(rain);
         Thread th_humi = new Thread(humi);
+        Thread q1 = new Thread(q11);
+        Thread q2 = new Thread(q12);
+        Thread q3 = new Thread(q13);
+
+
+        th_temp.start();
+        q11.setQ(temp.getfa(1));
+        q1.start();
 
 
 
 
-        t.start();
-        t.join();
         }
 }
