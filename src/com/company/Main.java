@@ -5,8 +5,6 @@
 
 package com.company;
 
-import jdk.nashorn.internal.ir.Block;
-
 import java.io.*;
 import java.util.*;
 import java.lang.*;
@@ -17,6 +15,10 @@ class Temperature implements Runnable{
 
     public BlockingQueue<Float> a = new ArrayBlockingQueue<Float>(1000);
 //    public ArrayList<Float> a = new ArrayList();
+    public Integer minvalue = null;
+    public Integer maxvalue = null;
+    public Float avgvalue = null;
+
 
     public Temperature() {
     }
@@ -40,6 +42,65 @@ class Temperature implements Runnable{
     {
         return this.a;
     }
+
+    public BlockingQueue<Float> getfirst() throws InterruptedException {
+        int i;
+        BlockingQueue<Float> b = new ArrayBlockingQueue<Float>(1000);
+        for(i=0;i<100;i++){
+            b.put(a.element());
+        }
+        return b;
+    }
+
+    public BlockingQueue<Float> getsecond() throws InterruptedException {
+        int i;
+        BlockingQueue<Float> b = new ArrayBlockingQueue<Float>(1000);
+        for(i=100;i<200;i++){
+            b.put(a.element());
+        }
+        return b;
+    }
+    public BlockingQueue<Float> getthird() throws InterruptedException {
+        int i;
+        BlockingQueue<Float> b = new ArrayBlockingQueue<Float>(1000);
+        for(i=200;i<300;i++){
+            b.put(a.element());
+        }
+        return b;
+    }
+    public BlockingQueue<Float> getfourth() throws InterruptedException {
+        int i;
+        BlockingQueue<Float> b = new ArrayBlockingQueue<Float>(1000);
+        for(i=300;i<400;i++){
+            b.put(a.element());
+        }
+        return b;
+    }
+    public BlockingQueue<Float> getfifth() throws InterruptedException {
+        int i;
+        BlockingQueue<Float> b = new ArrayBlockingQueue<Float>(1000);
+        for(i=400;i<500;i++){
+            b.put(a.element());
+        }
+        return b;
+    }
+
+
+    public void setValues(int a, int b, float f)
+    {
+        this.minvalue = a;
+        this.maxvalue = b;
+        this.avgvalue = f;
+    }
+
+    public String toString() {
+        System.out.println("Minimum value: " + this.minvalue);
+        System.out.println("Maximum value: " + this.maxvalue);
+        System.out.println("Average value: " + this.avgvalue);
+        return null;
+    }
+
+
 }
 
 class Rainfall implements Runnable{
@@ -100,9 +161,6 @@ class Humidity implements Runnable{
     }
 }
 
-class Query_one implements Runnable{
-
-}
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
