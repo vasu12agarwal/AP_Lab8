@@ -169,47 +169,102 @@ class Qone implements Runnable{
 
     ArrayList<Float> a;
     Float min;
-    Float max;
-    Float avg;
 
-    public Qone(ArrayList<Float> a){
-        this.a = a;
+    public Qone(){
+        this.a = null;
     }
 
-    float[] array = new float[3];
+    public void setQ(ArrayList<Float> b) {
+        this.a = b;
+    }
+
+    public void reset(){
+        this.a = null;
+    }
 
     public void run(){
         int i;
         min = a.get(0);
-        max = a.get(0);
         int sum=0;
         for(i=0;i<a.size();i++){
-            if(a.get(i)>max)
-                max = a.get(i);
             if(a.get(i)<min)
                 min = a.get(i);
-            sum += a.get(i);
         }
-        avg = Float.valueOf(sum/100);
-        array[0]=min;
-        array[1]=max;
-        array[2]=avg;
     }
 
-    public float[] getanswer(){
-        return array;
+    public float getanswer(){
+        return min;
     }
 
 }
 
 
+class Qtwo implements Runnable{
+
+    ArrayList<Float> a;
+    Float max;
+
+    public Qtwo(ArrayList<Float> a){
+        this.a = a;
+    }
+
+    public void run(){
+        int i;
+        max = a.get(0);
+        int sum=0;
+        for(i=0;i<a.size();i++){
+            if(a.get(i)>max)
+                max = a.get(i);
+        }
+    }
+
+    public float getanswer(){
+        return max;
+    }
+
+}
+
+
+
+class Qthree implements Runnable{
+
+    ArrayList<Float> a;
+    Float avg;
+
+    public Qthree(ArrayList<Float> a){
+        this.a = a;
+    }
+
+    public void run(){
+        int i;
+        int sum=0;
+        for(i=0;i<a.size();i++){
+            sum+=a.get(i);
+        }
+        avg = Float.valueOf(sum/100);
+    }
+
+    public float getanswer(){
+        return avg;
+    }
+
+}
+
+
+
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        Temperature r = new Temperature();
-        Thread t = new Thread(r);
+        Temperature temp = new Temperature();
+        Thread th_temp = new Thread(temp);
+        Rainfall rain = new Rainfall();
+        Thread th_rain = new Thread(rain);
+        Humidity humi = new Humidity();
+        Thread th_humi = new Thread(humi);
+
+
+
+
         t.start();
         t.join();
-
         }
-
 }
